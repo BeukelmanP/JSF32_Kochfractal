@@ -8,13 +8,14 @@ package calculate;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.Callable;
 import jsf31kochfractalfx.JSF31KochFractalFX;
 
 /**
  *
  * @author piete
  */
-public class KochSideCalculate implements Observer, Runnable {
+public class KochSideCalculate implements Observer, Callable {
 
     KochFractal KF = new KochFractal();
     KochManager KM;
@@ -28,7 +29,7 @@ public class KochSideCalculate implements Observer, Runnable {
         KF.setLevel(lvl);
     }
 
-    @Override
+    /*@Override
     public void run() {
         KF.addObserver(this);
         switch (side) {
@@ -44,7 +45,7 @@ public class KochSideCalculate implements Observer, Runnable {
         }
         KM.addedges(edges);
         KM.RequestDrawing();
-    }
+    }*/
 
     public ArrayList<Edge> getEdges() {
         return edges;
@@ -53,5 +54,25 @@ public class KochSideCalculate implements Observer, Runnable {
     @Override
     public void update(Observable o, Object e) {
         edges.add((Edge) e);
+    }
+
+    @Override
+    public ArrayList<Edge> call() throws Exception {
+         KF.addObserver(this);
+        switch (side) {
+            case "left":
+                KF.generateLeftEdge();
+                break;
+            case "right":
+                KF.generateRightEdge();
+                break;
+            case "bottom":
+                KF.generateBottomEdge();
+                break;
+        }
+        KM.addedges(edges);
+        KM.RequestDrawing();
+        
+        return edges;
     }
 }

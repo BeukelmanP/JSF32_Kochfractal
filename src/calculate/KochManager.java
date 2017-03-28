@@ -8,6 +8,10 @@ package calculate;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import jsf31kochfractalfx.JSF31KochFractalFX;
 import timeutil.TimeStamp;
 
@@ -29,11 +33,27 @@ public class KochManager implements Observer {
         kochFractal.addObserver(this);
     }
 
-    public void changeLevel(int nxt) {
+    public void changeLevel(int nxt) throws InterruptedException, ExecutionException {
         edges.clear();
         kochFractal.setLevel(nxt);
         timeCalculate.setBegin("Start");
 
+        ExecutorService pool = Executors.newFixedThreadPool(10);
+        KochSideCalculate left = new KochSideCalculate(this, "left", nxt);
+        Future<ArrayList<Edge>> edgel = pool.submit(left);
+
+        KochSideCalculate right = new KochSideCalculate(this, "right", nxt);
+        Future<ArrayList<Edge>> edger = pool.submit(right);
+
+        KochSideCalculate bottom = new KochSideCalculate(this, "bottom", nxt);
+        Future<ArrayList<Edge>> edgeb = pool.submit(bottom);
+
+        edges.addAll(edgeb.get());
+        edges.addAll(edgel.get());
+        edges.addAll(edger.get());
+
+        /*
+        
         KochSideCalculate left = new KochSideCalculate(this, "left", nxt);
         Thread tLeft = new Thread(left);
         tLeft.start();
@@ -42,8 +62,8 @@ public class KochManager implements Observer {
         tRight.start();
         KochSideCalculate bottom = new KochSideCalculate(this, "bottom", nxt);
         Thread tBottom = new Thread(bottom);
-        tBottom.start();
-
+        tBottom.start();*/
+        application.requestDrawEdges();
         application.setTextNrEdges("Amount of Edges: " + kochFractal.getNrOfEdges());
     }
 
@@ -57,9 +77,10 @@ public class KochManager implements Observer {
             application.clearKochPanel();
             application.requestDrawEdges();
             count = 0;
-            timeCalculate.setEnd("Ready with calculation");
+            timeCalculate.setEndBegin("Ready with calculation");
             System.out.println(timeCalculate.toString());
             application.setTextCalc(timeCalculate.toString());
+            application.setTextNrEdges("Amount of Edges: " + kochFractal.getNrOfEdges());
         }
     }
 
