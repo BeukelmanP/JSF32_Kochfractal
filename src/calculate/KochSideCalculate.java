@@ -54,5 +54,4 @@ public class KochSideCalculate implements Observer, Runnable {
     public void update(Observable o, Object e) {
         edges.add((Edge) e);
     }
-
 }
