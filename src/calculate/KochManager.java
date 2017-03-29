@@ -39,8 +39,9 @@ public class KochManager implements Observer {
         kochFractal.setLevel(nxt);
         timeCalculate.setBegin("Start");
         PoolController PC = new PoolController(this, application, pool, nxt);
-        Thread pcThread = new Thread(PC);
-        pcThread.start();
+        pool.submit(PC);
+        //Thread pcThread = new Thread(PC);
+       // pcThread.start();
         timeCalculate.setBegin("Test");
     }
 

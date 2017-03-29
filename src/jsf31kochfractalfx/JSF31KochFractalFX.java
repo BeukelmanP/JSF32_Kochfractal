@@ -20,6 +20,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -58,7 +59,9 @@ public class JSF31KochFractalFX extends Application {
     private Canvas kochPanel;
     private final int kpWidth = 500;
     private final int kpHeight = 500;
-
+    
+    
+    
     @Override
     public void start(Stage primaryStage) {
 
