@@ -18,12 +18,10 @@ import jsf31kochfractalfx.JSF31KochFractalFX;
 public class KochSideCalculate implements Observer, Callable {
 
     KochFractal KF = new KochFractal();
-    KochManager KM;
     ArrayList<Edge> edges;
     String side;
 
-    public KochSideCalculate(KochManager KM, String side, int lvl) {
-        this.KM = KM;
+    public KochSideCalculate(String side, int lvl) {
         edges = new ArrayList<Edge>();
         this.side = side;
         KF.setLevel(lvl);
@@ -70,8 +68,8 @@ public class KochSideCalculate implements Observer, Callable {
                 KF.generateBottomEdge();
                 break;
         }
-        KM.addedges(edges);
-        KM.RequestDrawing();
+        //KM.addedges(edges);
+        //KM.RequestDrawing();
         
         return edges;
     }
