@@ -30,7 +30,7 @@ public class KochManager implements Observer {
     public KochManager(JSF31KochFractalFX application) {
         this.application = application;
         kochFractal.addObserver(this);
-        pool = Executors.newFixedThreadPool(3);
+        pool = Executors.newFixedThreadPool(4);
 
     }
 
