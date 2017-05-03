@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -55,26 +56,43 @@ public class JSF31KochFractalFX extends Application {
     private Button buttonDecreaseLevel;
     private Button buttonIncreaseLevel;
 
+    //ProgressBars
+    public ProgressBar progressLeft;
+    public ProgressBar progressRight;
+    public ProgressBar progressBottom;
+
+    public Label messageLeft;
+    public Label messageRight;
+    public Label messageBottom;
     // Koch panel and its size
     private Canvas kochPanel;
     private final int kpWidth = 500;
     private final int kpHeight = 500;
-    
-    
-    
+
     @Override
     public void start(Stage primaryStage) {
-
+        progressLeft = new ProgressBar();
+        progressRight = new ProgressBar();
+        progressBottom = new ProgressBar();
+        messageLeft = new Label();
+        messageRight = new Label();
+        messageBottom = new Label();
         // Define grid pane
         GridPane grid;
         grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(messageLeft, 13, 0);
+        grid.add(messageRight, 13, 1);
+        grid.add(messageBottom, 13, 2);
 
+        grid.add(progressLeft, 14, 0);
+        grid.add(progressRight, 14, 1);
+        grid.add(progressBottom, 14, 2);
         // For debug purposes
         // Make de grid lines visible
-        // grid.setGridLinesVisible(true);
+        //grid.setGridLinesVisible(true);
         // Drawing panel for Koch fractal
         kochPanel = new Canvas(kpWidth, kpHeight);
         grid.add(kochPanel, 0, 3, 25, 1);
@@ -206,11 +224,35 @@ public class JSF31KochFractalFX extends Application {
         gc.strokeLine(e1.X1, e1.Y1, e1.X2, e1.Y2);
     }
 
+    public void drawEdgeWhite(Edge e) {
+        // Graphics
+        GraphicsContext gc = kochPanel.getGraphicsContext2D();
+
+        // Adjust edge for zoom and drag
+        Edge e1 = edgeAfterZoomAndDrag(e);
+
+        // Set line color
+        gc.setStroke(Color.WHITE);
+
+        // Set line width depending on level
+        if (currentLevel <= 3) {
+            gc.setLineWidth(2.0);
+        } else if (currentLevel <= 5) {
+            gc.setLineWidth(1.5);
+        } else {
+            gc.setLineWidth(1.0);
+        }
+
+        // Draw line
+        gc.strokeLine(e1.X1, e1.Y1, e1.X2, e1.Y2);
+    }
+
     public void setTextNrEdges(String text) {
         labelNrEdgesText.setText(text);
     }
 
     public void setTextCalc(String text) {
+        labelCalcText.setText("");
         labelCalcText.setText(text);
     }
 
